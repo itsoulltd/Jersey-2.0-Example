@@ -37,7 +37,7 @@ public class FetchAnyService {
 			, @PathParam("location") Integer offset) {
 		String error = "";
 		try {
-			Connection conn = JDBConnectionPool.shared().getConnectionFromPool("testDB");
+			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
 			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)
@@ -72,7 +72,7 @@ public class FetchAnyService {
 	public Response fetch(FetchQuery fquery) {
 		String error = "";
 		try {
-			Connection conn = JDBConnectionPool.shared().getConnectionFromPool("testDB");
+			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
 			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)

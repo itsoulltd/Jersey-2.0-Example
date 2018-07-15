@@ -15,7 +15,7 @@ public class ResourceLoader implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		JDBConnectionPool.configureConnectionPool("java:comp/env/jdbc/testDB");
+		JDBConnectionPool.configure("java:comp/env/jdbc/testDB");
 		System.out.println("jdbc/testDB is uploaded.");
 	}
 

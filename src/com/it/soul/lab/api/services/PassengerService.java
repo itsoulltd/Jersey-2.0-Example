@@ -29,7 +29,7 @@ public class PassengerService {
 	public Response findPassengerAt(@PathParam("location") Integer offset, @PathParam("size") Integer limit) {
 		String error = "";
 		try {
-			Connection conn = JDBConnectionPool.shared().getConnectionFromPool("testDB");
+			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
 			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)
@@ -60,7 +60,7 @@ public class PassengerService {
 	public Response allPassgenger() {
 		String error = "";
 		try {
-			Connection conn = JDBConnectionPool.shared().getConnectionFromPool("testDB");
+			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
 			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)
