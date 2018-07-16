@@ -2,6 +2,7 @@ package com.it.soul.lab.service.models;
 
 import java.util.Map;
 
+import com.it.soul.lab.service.jpa.models.JPAPassenger;
 import com.it.soul.lab.sql.query.models.Property;
 import com.it.soul.lab.sql.query.models.Row;
 
@@ -46,6 +47,13 @@ public class Passenger {
 	
 	public Passenger(Row properties) {
 		this(properties.keyValueMap());
+	}
+	
+	public Passenger(JPAPassenger properties) {
+		name = properties.getName();
+		id = properties.getId();
+		age = properties.getAge();
+		sex = properties.getSex();
 	}
 	
 }
