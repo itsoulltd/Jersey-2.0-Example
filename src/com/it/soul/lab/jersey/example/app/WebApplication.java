@@ -7,5 +7,6 @@ public class WebApplication extends ResourceConfig{
 	public WebApplication() {
 		packages("com.it.soul.lab.api.services");
 		register(SecuredAuthorizationFilter.class);
+		JPAResourceLoader.configure();
 	}
 }

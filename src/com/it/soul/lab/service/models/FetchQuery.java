@@ -1,6 +1,9 @@
 package com.it.soul.lab.service.models;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.it.soul.lab.sql.query.models.Property;
 
 public class FetchQuery implements Serializable {
 
@@ -9,6 +12,7 @@ public class FetchQuery implements Serializable {
 	private String orderBy;
 	private Integer location;
 	private Integer size;
+	private List<Criteria> criterias;
 	public String getTable() {
 		return table;
 	}
@@ -38,6 +42,12 @@ public class FetchQuery implements Serializable {
 	}
 	public void setSize(Integer size) {
 		this.size = size;
+	}
+	public List<Criteria> getCriterias() {
+		return criterias;
+	}
+	public void setCriterias(List<Criteria> criterias) {
+		this.criterias = criterias;
 	}
 
 	
