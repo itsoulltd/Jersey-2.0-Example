@@ -13,7 +13,7 @@ public class JPAPassenger {
 	@Column
 	private String name;
 	@Column @Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@Column
 	private Integer age;

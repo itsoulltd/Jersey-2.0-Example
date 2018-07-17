@@ -165,4 +165,30 @@ public class PassengerService {
 		return Response.status(500).entity(error).build();
 	}
 	
+	@POST @Path("JPA/create")
+	@Produces(MediaType.APPLICATION_JSON) 
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response createNew(FetchQuery fquery) {
+		String error = "";
+		try {
+			ORMService<JPAPassenger> service = new ORMService<>(JPAResourceLoader.entityManager(), JPAPassenger.class);
+			JPAPassenger passenger = new JPAPassenger();
+			for (Criteria element : fquery.getCriterias()) {
+				Property prop = element.getProperty();
+				if(prop.getKey().equalsIgnoreCase("name")) {
+					passenger.setName(prop.getValue().toString());
+				}else if(prop.getKey().equalsIgnoreCase("age")) {
+					passenger.setAge((Integer)prop.getValue());
+				}else if(prop.getKey().equalsIgnoreCase("sex")) {
+					passenger.setSex(prop.getValue().toString());
+				}
+			}
+			service.addNewItem(passenger);
+			return Response.status(200).entity("Created").build();
+		}catch(Exception e) {
+			error = e.getMessage();
+		}
+		return Response.status(500).entity(error).build();
+	}
+	
 }

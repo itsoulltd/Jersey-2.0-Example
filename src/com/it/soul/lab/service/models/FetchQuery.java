@@ -3,8 +3,6 @@ package com.it.soul.lab.service.models;
 import java.io.Serializable;
 import java.util.List;
 
-import com.it.soul.lab.sql.query.models.Property;
-
 public class FetchQuery implements Serializable {
 
 	private static final long serialVersionUID = 2000111050307543750L;
