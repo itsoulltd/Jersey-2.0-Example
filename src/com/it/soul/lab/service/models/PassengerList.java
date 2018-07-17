@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PassengerList {
+	
+	public PassengerList() {
+		super();
+	}
+
 	private List<Passenger> passengerList = new ArrayList<Passenger>();
 	 
     public List<Passenger> getPassengerList() {
