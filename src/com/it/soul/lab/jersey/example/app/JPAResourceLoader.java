@@ -11,6 +11,9 @@ public class JPAResourceLoader {
 
 	private JPAResourceLoader() {
 		super();
+		//We must Create ORMController for each session.
+		//One user One or per/thread EntityManager is suitable.
+		//Production Mode: Container Injected EntityManager per session.
 		controller = new ORMController("testDB");
 	}
 	
