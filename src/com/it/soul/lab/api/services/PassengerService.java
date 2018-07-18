@@ -183,7 +183,7 @@ public class PassengerService {
 					passenger.setSex(prop.getValue().toString());
 				}
 			}
-			service.addNewItem(passenger);
+			service.insert(passenger);
 			return Response.status(200).entity("Created").build();
 		}catch(Exception e) {
 			error = e.getMessage();
