@@ -124,7 +124,7 @@ public class PassengerService {
 		String error = "";
 		try {
 			ORMService<JPAPassenger> allPass = new ORMService<>(JPAResourceLoader.entityManager(), JPAPassenger.class);
-			JPAPassenger passenger = (JPAPassenger) allPass.findBy(new Property("id", id, DataType.INT));
+			JPAPassenger passenger = allPass.findBy(new Property("id", id, DataType.INT));
 			return Response.status(200).entity(passenger).build();
 			
 		}catch(Exception e) {
