@@ -15,15 +15,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.it.soul.lab.connect.JDBConnectionPool;
-import com.it.soul.lab.service.models.FetchQuery;
-import com.it.soul.lab.service.models.Passenger;
-import com.it.soul.lab.service.models.PassengerList;
 import com.it.soul.lab.sql.SQLExecutor;
 import com.it.soul.lab.sql.query.SQLQuery;
 import com.it.soul.lab.sql.query.SQLSelectQuery;
 import com.it.soul.lab.sql.query.models.Property;
 import com.it.soul.lab.sql.query.models.Row;
 import com.it.soul.lab.sql.query.models.Table;
+import com.itsoul.lab.domains.FetchQuery;
+import com.itsoul.lab.domains.Passenger;
+import com.itsoul.lab.domains.PassengerList;
 import com.it.soul.lab.sql.query.SQLQuery.QueryType;
 
 @Path("/fetch")
@@ -40,7 +40,7 @@ public class FetchAnyService {
 			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
-			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)
+			SQLSelectQuery query = new SQLQuery.Builder(QueryType.SELECT)
 					.columns()
 					.from(table)
 					.orderBy(orderBy)
@@ -75,7 +75,7 @@ public class FetchAnyService {
 			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
-			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)
+			SQLSelectQuery query = new SQLQuery.Builder(QueryType.SELECT)
 					.columns()
 					.from(fquery.getTable())
 					.orderBy(fquery.getOrderBy())

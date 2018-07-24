@@ -1,4 +1,4 @@
-package com.it.soul.lab.service.models;
+package com.itsoul.lab.domains;
 
 import java.util.ArrayList;
 import java.util.List;

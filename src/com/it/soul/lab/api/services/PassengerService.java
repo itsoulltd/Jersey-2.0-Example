@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,12 +17,9 @@ import javax.ws.rs.core.Response;
 import com.it.soul.lab.connect.JDBConnectionPool;
 import com.it.soul.lab.jersey.example.app.JPAResourceLoader;
 import com.it.soul.lab.jersey.example.app.SecuredAuthorization;
+import com.it.soul.lab.jpql.query.JPQLQuery;
+import com.it.soul.lab.jpql.query.JPQLSelectQuery;
 import com.it.soul.lab.service.ORMService;
-import com.it.soul.lab.service.jpa.models.JPAPassenger;
-import com.it.soul.lab.service.models.Criteria;
-import com.it.soul.lab.service.models.FetchQuery;
-import com.it.soul.lab.service.models.Passenger;
-import com.it.soul.lab.service.models.PassengerList;
 import com.it.soul.lab.sql.SQLExecutor;
 import com.it.soul.lab.sql.query.SQLQuery;
 import com.it.soul.lab.sql.query.SQLQuery.QueryType;
@@ -34,6 +32,10 @@ import com.it.soul.lab.sql.query.models.Operator;
 import com.it.soul.lab.sql.query.models.Property;
 import com.it.soul.lab.sql.query.models.Row;
 import com.it.soul.lab.sql.query.models.Table;
+import com.itsoul.lab.domains.Criteria;
+import com.itsoul.lab.domains.FetchQuery;
+import com.itsoul.lab.domains.Passenger;
+import com.itsoul.lab.domains.PassengerList;
 
 @Path("/passenger")
 public class PassengerService {
@@ -46,7 +48,7 @@ public class PassengerService {
 			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
-			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)
+			SQLSelectQuery query = new SQLQuery.Builder(QueryType.SELECT)
 					.columns()
 					.from("Passenger")
 					.orderBy("id")
@@ -77,7 +79,7 @@ public class PassengerService {
 			Connection conn = JDBConnectionPool.connection("testDB");
 			SQLExecutor exe = new SQLExecutor(conn);
 			
-			SQLSelectQuery query = (SQLSelectQuery) new SQLQuery.Builder(QueryType.SELECT)
+			SQLSelectQuery query = new SQLQuery.Builder(QueryType.SELECT)
 					.columns()
 					.from("Passenger")
 					.orderBy("age")
@@ -104,11 +106,22 @@ public class PassengerService {
 	public Response findPassengerUsingJPA(@PathParam("location") Integer offset, @PathParam("size") Integer limit) {
 		String error = "";
 		try {
-			ORMService<JPAPassenger> allPass = new ORMService<>(JPAResourceLoader.entityManager(), JPAPassenger.class);
-			List<JPAPassenger> passengers = (List<JPAPassenger>) allPass.findAll();
+			ORMService<Passenger> service = new ORMService<>(JPAResourceLoader.entityManager(), Passenger.class);
+			
+			JPQLSelectQuery query = new JPQLQuery.Builder(QueryType.SELECT)
+											.columns()
+											.from(service.getEntity())
+											.orderBy("id")
+											.build();
+			Query iQuery = service.getEntityManager().createQuery(query.toString());
+			iQuery.setFirstResult(offset);
+			iQuery.setMaxResults(limit);
+			@SuppressWarnings("unchecked")
+			List<Passenger> passengers = iQuery.getResultList();
+			
 			PassengerList list = new PassengerList();
-			for (JPAPassenger item : passengers) {
-				list.add(new Passenger(item));
+			for (Passenger item : passengers) {
+				list.add(item);
 			}
 			return Response.status(200).entity(list).build();
 			
@@ -123,8 +136,8 @@ public class PassengerService {
 	public Response findPassengerUsingJPAByID(@PathParam("id") Integer id) {
 		String error = "";
 		try {
-			ORMService<JPAPassenger> allPass = new ORMService<>(JPAResourceLoader.entityManager(), JPAPassenger.class);
-			JPAPassenger passenger = allPass.findBy(new Property("id", id, DataType.INT));
+			ORMService<Passenger> allPass = new ORMService<>(JPAResourceLoader.entityManager(), Passenger.class);
+			Passenger passenger = allPass.findBy(new Property("id", id, DataType.INT));
 			return Response.status(200).entity(passenger).build();
 			
 		}catch(Exception e) {
@@ -139,7 +152,7 @@ public class PassengerService {
 	public Response fetch(FetchQuery fquery) {
 		String error = "";
 		try {
-			ORMService<JPAPassenger> service = new ORMService<>(JPAResourceLoader.entityManager(), JPAPassenger.class);
+			ORMService<Passenger> service = new ORMService<>(JPAResourceLoader.entityManager(), Passenger.class);
 			ExpressionInterpreter and = null;
 			ExpressionInterpreter lhr = null;
 			for (Criteria element : fquery.getCriterias()) {
@@ -153,10 +166,10 @@ public class PassengerService {
 					lhr = and;
 				}
 			}
-			List<JPAPassenger> items = (List<JPAPassenger>) service.findMatches(and);
+			List<Passenger> items = (List<Passenger>) service.findMatches(and);
 			PassengerList list = new PassengerList();
-			for (JPAPassenger item : items) {
-				list.add(new Passenger(item));
+			for (Passenger item : items) {
+				list.add(item);
 			}
 			return Response.status(200).entity(list).build();
 		}catch(Exception e) {
@@ -168,21 +181,10 @@ public class PassengerService {
 	@POST @Path("JPA/create")
 	@Produces(MediaType.APPLICATION_JSON) 
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createNew(FetchQuery fquery) {
+	public Response createNew(Passenger passenger) {
 		String error = "";
 		try {
-			ORMService<JPAPassenger> service = new ORMService<>(JPAResourceLoader.entityManager(), JPAPassenger.class);
-			JPAPassenger passenger = new JPAPassenger();
-			for (Criteria element : fquery.getCriterias()) {
-				Property prop = element.getProperty();
-				if(prop.getKey().equalsIgnoreCase("name")) {
-					passenger.setName(prop.getValue().toString());
-				}else if(prop.getKey().equalsIgnoreCase("age")) {
-					passenger.setAge((Integer)prop.getValue());
-				}else if(prop.getKey().equalsIgnoreCase("sex")) {
-					passenger.setSex(prop.getValue().toString());
-				}
-			}
+			ORMService<Passenger> service = new ORMService<>(JPAResourceLoader.entityManager(), Passenger.class);
 			service.insert(passenger);
 			return Response.status(200).entity("Created").build();
 		}catch(Exception e) {

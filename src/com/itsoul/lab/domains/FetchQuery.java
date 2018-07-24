@@ -1,7 +1,10 @@
-package com.it.soul.lab.service.models;
+package com.itsoul.lab.domains;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.it.soul.lab.sql.query.models.DataType;
 
 public class FetchQuery implements Serializable {
 
@@ -47,6 +50,12 @@ public class FetchQuery implements Serializable {
 	public void setCriterias(List<Criteria> criterias) {
 		this.criterias = criterias;
 	}
-
+	public void addCriteria(String key, String value, DataType type) {
+		if(getCriterias() == null) {
+			List<Criteria> criterias = new ArrayList<>();
+			setCriterias(criterias);
+		}
+		getCriterias().add(new Criteria(key, value, type));
+	}
 	
 }

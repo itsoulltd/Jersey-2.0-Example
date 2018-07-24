@@ -1,4 +1,6 @@
-package com.it.soul.lab.service.jpa.models;
+package com.itsoul.lab.domains;
+
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,9 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.it.soul.lab.sql.query.models.Property;
+import com.it.soul.lab.sql.query.models.Row;
+
 @Entity
 @Table(name="Passenger")
-public class JPAPassenger {
+public class Passenger {
 	@Column
 	private String name;
 	@Column @Id
@@ -19,20 +24,15 @@ public class JPAPassenger {
 	private Integer age;
 	@Column
 	private String sex;
-	
-	public JPAPassenger() {}
-	
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 	public int getId() {
 		return id;
 	}
-	
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -47,6 +47,19 @@ public class JPAPassenger {
 	}
 	public void setSex(String sex) {
 		this.sex = sex;
+	}
+	
+	public Passenger() {}
+	
+	public Passenger(Map<String,Property> properties) {
+		name = (String)((Property)properties.get("name")).getValue();
+		id =  (Integer)((Property)properties.get("id")).getValue();
+		age = (Integer)((Property)properties.get("age")).getValue();
+		sex = (String)((Property)properties.get("sex")).getValue();
+	}
+	
+	public Passenger(Row properties) {
+		this(properties.keyValueMap());
 	}
 	
 }
