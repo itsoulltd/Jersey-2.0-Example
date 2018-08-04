@@ -137,7 +137,7 @@ public class PassengerService {
 		String error = "";
 		try {
 			ORMService<Passenger> allPass = new ORMService<>(JPAResourceLoader.entityManager(), Passenger.class);
-			Passenger passenger = allPass.findBy(new Property("id", id, DataType.INT));
+			Passenger passenger = allPass.readBy(new Property("id", id, DataType.INT));
 			return Response.status(200).entity(passenger).build();
 			
 		}catch(Exception e) {
@@ -166,7 +166,7 @@ public class PassengerService {
 					lhr = and;
 				}
 			}
-			List<Passenger> items = (List<Passenger>) service.findMatches(and);
+			List<Passenger> items = (List<Passenger>) service.read(and);
 			PassengerList list = new PassengerList();
 			for (Passenger item : items) {
 				list.add(item);
